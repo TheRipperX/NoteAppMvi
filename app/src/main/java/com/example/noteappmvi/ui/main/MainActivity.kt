@@ -1,8 +1,7 @@
-package com.example.noteappmvi
+package com.example.noteappmvi.ui.main
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.provider.ContactsContract.CommonDataKinds.Note
 import com.example.noteappmvi.databinding.ActivityMainBinding
 import com.example.noteappmvi.ui.detail.NoteFragment
 import dagger.hilt.android.AndroidEntryPoint
