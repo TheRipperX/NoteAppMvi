@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity() {
                 NoteFragment().show(supportFragmentManager, NoteFragment().tag)
             }
 
-            listMain.setAdapterItems(mainAdapter, StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL))
+            listMain.setAdapterItems(mainAdapter, StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.HORIZONTAL))
 
         }
     }
