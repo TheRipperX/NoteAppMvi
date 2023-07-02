@@ -96,6 +96,14 @@ class NoteFragment : BottomSheetDialogFragment() {
                 noteEntity.category = categoryData
                 noteEntity.priority = priorityData
 
+                if(title.isEmpty() || desc.isEmpty() || categoryData.isEmpty() || priorityData.isEmpty()){
+                    Toast.makeText(
+                        requireContext(),
+                        "Please Enter Valid Data ...",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    return@setOnClickListener
+                }
                 lifecycleScope.launch {
                     detailViewModel.detailIntent.send(DetailIntent.SaveNote(noteEntity = noteEntity))
                 }

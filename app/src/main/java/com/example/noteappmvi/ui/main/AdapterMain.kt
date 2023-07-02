@@ -2,24 +2,14 @@ package com.example.noteappmvi.ui.main
 
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.OnReceiveContentListener
 import android.view.ViewGroup
-import androidx.appcompat.widget.PopupMenu
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.noteappmvi.R
 import com.example.noteappmvi.data.model.NoteEntity
 import com.example.noteappmvi.databinding.MainLayoutAdapterBinding
 import com.example.noteappmvi.utils.AdapterDiffer
-import com.example.noteappmvi.utils.DELETE
-import com.example.noteappmvi.utils.EDIT
-import com.example.noteappmvi.utils.HEALTHY
-import com.example.noteappmvi.utils.HIGH
-import com.example.noteappmvi.utils.HOME
-import com.example.noteappmvi.utils.LEARNING
-import com.example.noteappmvi.utils.LOW
-import com.example.noteappmvi.utils.NORMAL
-import com.example.noteappmvi.utils.WORK
+import com.example.noteappmvi.utils.*
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
@@ -51,7 +41,7 @@ class AdapterMain @Inject constructor(@ApplicationContext private val context: C
 
                 //set pop up menu
                 imgMenuItem.setOnClickListener {
-                    val popupMenu = PopupMenu(context, it)
+                    val popupMenu = android.widget.PopupMenu(context, it)
                     popupMenu.menuInflater.inflate(R.menu.menu_item_adapter, popupMenu.menu)
                     popupMenu.setOnMenuItemClickListener { item ->
                         when(item.itemId) {
