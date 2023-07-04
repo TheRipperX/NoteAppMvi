@@ -49,3 +49,18 @@ fun Spinner.setAdapterSpinner(list: MutableList<*>, text: (String) -> Unit) {
         }
     }
 }
+
+fun MutableList<*>.isSetDataSpinner(str: String): Int{
+    var number = 0
+
+    for (i in this.indices) {
+        if(this[i] == str){
+            number = i
+            break
+        }
+    }
+
+
+    return number
+
+}

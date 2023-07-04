@@ -2,11 +2,12 @@ package com.example.noteappmvi.ui.main
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
-import android.widget.SearchView
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
@@ -70,10 +71,14 @@ class MainActivity : AppCompatActivity() {
                             listMain.setAdapterItems(mainAdapter, StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL))
 
                             mainAdapter.clickItems { notes, s ->
+
                                 if (s == DELETE) {
-                                    MainIntent.DeleteNote(notes)
+                                    mainViewModel.handelIntent(MainIntent.DeleteNote(noteEntity = notes))
                                 }else {
                                     val fragment = NoteFragment()
+                                    val bundle = Bundle()
+                                    bundle.putInt(BUNDLE_ID, notes.id)
+                                    fragment.arguments = bundle
                                     fragment.show(supportFragmentManager, fragment.tag)
                                 }
                             }
@@ -121,8 +126,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onQueryTextChange(p0: String?): Boolean {
-                if (p0.toString().isNotEmpty())
-                    mainViewModel.handelIntent(MainIntent.SearchNote(p0.toString()))
+                mainViewModel.handelIntent(MainIntent.SearchNote(p0.toString()))
                 return true
             }
 
@@ -138,8 +142,8 @@ class MainActivity : AppCompatActivity() {
         builder.setTitle("Filter Note...")
         builder.setSingleChoiceItems(listItem, priorityId) { dialog, which ->
             when(which) {
-                0 -> {MainIntent.AllNotes}
-                in 1 .. listItem.size -> {MainIntent.FilterNote(listItem[which])}
+                0 -> {mainViewModel.handelIntent(MainIntent.AllNotes)}
+                in 1 .. listItem.size -> {mainViewModel.handelIntent(MainIntent.FilterNote(listItem[which]))}
             }
             priorityId = which
             dialog.dismiss()

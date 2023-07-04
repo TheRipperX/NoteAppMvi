@@ -32,6 +32,8 @@ class DetailViewModel @Inject constructor(private val detailRepository: DetailRe
             when(it) {
                 is DetailIntent.SpinnerList -> { setSpinnerData()}
                 is DetailIntent.SaveNote -> { saveNotes(it.noteEntity)}
+                is DetailIntent.EditNote -> { editNote(it.noteEntity) }
+                is DetailIntent.FindNote -> { findNote(it.id) }
             }
         }
     }
@@ -51,6 +53,21 @@ class DetailViewModel @Inject constructor(private val detailRepository: DetailRe
         }
     }
 
+
+    private fun editNote(noteEntity: NoteEntity) = viewModelScope.launch {
+        _state.value = try {
+            DetailState.EditNote(detailRepository.updateNote(noteEntity = noteEntity))
+        }
+        catch (e: Exception) {
+            DetailState.Error(e.message.toString())
+        }
+    }
+
+    private fun findNote(id: Int) = viewModelScope.launch {
+        detailRepository.findNote(id).collect {
+            _state.value = DetailState.DetailNote(it)
+        }
+    }
 
 
 }

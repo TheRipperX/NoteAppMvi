@@ -3,6 +3,7 @@ package com.example.noteappmvi.ui.main
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.PopupMenu
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.noteappmvi.R
@@ -41,7 +42,7 @@ class AdapterMain @Inject constructor(@ApplicationContext private val context: C
 
                 //set pop up menu
                 imgMenuItem.setOnClickListener {
-                    val popupMenu = android.widget.PopupMenu(context, it)
+                    val popupMenu = PopupMenu(context, it)
                     popupMenu.menuInflater.inflate(R.menu.menu_item_adapter, popupMenu.menu)
                     popupMenu.setOnMenuItemClickListener { item ->
                         when(item.itemId) {

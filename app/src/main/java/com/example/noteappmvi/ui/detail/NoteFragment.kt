@@ -1,6 +1,7 @@
 package com.example.noteappmvi.ui.detail
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +12,10 @@ import androidx.lifecycle.lifecycleScope
 import com.example.noteappmvi.R
 import com.example.noteappmvi.data.model.NoteEntity
 import com.example.noteappmvi.databinding.FragmentNoteBinding
+import com.example.noteappmvi.utils.ADD
+import com.example.noteappmvi.utils.BUNDLE_ID
+import com.example.noteappmvi.utils.EDIT
+import com.example.noteappmvi.utils.isSetDataSpinner
 import com.example.noteappmvi.utils.setAdapterSpinner
 import com.example.noteappmvi.viewmodel.detail.DetailIntent
 import com.example.noteappmvi.viewmodel.detail.DetailState
@@ -33,9 +38,15 @@ class NoteFragment : BottomSheetDialogFragment() {
     @Inject
     lateinit var noteEntity: NoteEntity
 
+    //lists spinner
+    private var categoryList = mutableListOf<String>()
+    private var priorityList = mutableListOf<String>()
+
     private var categoryData = ""
     private var priorityData = ""
     private var idNote = 0
+
+    private var type = ""
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -54,6 +65,10 @@ class NoteFragment : BottomSheetDialogFragment() {
 
     private fun main() {
 
+        idNote = arguments?.getInt(BUNDLE_ID) ?: 0
+
+        type = if (idNote == 0) ADD else EDIT
+
         binding.apply {
             //close fragments
             imgClose.setOnClickListener { dismiss() }
@@ -63,12 +78,20 @@ class NoteFragment : BottomSheetDialogFragment() {
                 //send
                 detailViewModel.detailIntent.send(DetailIntent.SpinnerList)
 
+                if(type == EDIT)
+                    detailViewModel.detailIntent.send(DetailIntent.FindNote(idNote))
+
                 detailViewModel.state.collect {
                     when (it) {
                         is DetailState.SpinnerList -> {
+                            //add list to data
+
+
+                            categoryList.addAll(it.category)
                             spinnerCategorise.setAdapterSpinner(it.category.toMutableList()) { str ->
                                 categoryData = str
                             }
+                            priorityList.addAll(it.priority)
                             spinnerPriority.setAdapterSpinner(it.priority.toMutableList()) { str ->
                                 priorityData = str
                             }
@@ -83,11 +106,24 @@ class NoteFragment : BottomSheetDialogFragment() {
                             Toast.makeText(requireContext(), it.error, Toast.LENGTH_SHORT).show()
                         }
                         is DetailState.Idle -> {}
+
+                        is DetailState.EditNote -> {
+                            Toast.makeText(requireContext(), "Edit Note Success", Toast.LENGTH_SHORT).show()
+                            dismiss()
+                        }
+
+                        is DetailState.DetailNote -> {
+                            edtTitle.setText(it.noteEntity.title)
+                            edtDec.setText(it.noteEntity.desc)
+                            spinnerCategorise.setSelection(categoryList.isSetDataSpinner(it.noteEntity.category))
+                            spinnerPriority.setSelection(priorityList.isSetDataSpinner(it.noteEntity.priority))
+                        }
                     }
                 }
             }
 
             btnSave.setOnClickListener {
+
                 val title = edtTitle.text.toString()
                 val desc = edtDec.text.toString()
                 noteEntity.id = idNote
@@ -105,7 +141,10 @@ class NoteFragment : BottomSheetDialogFragment() {
                     return@setOnClickListener
                 }
                 lifecycleScope.launch {
-                    detailViewModel.detailIntent.send(DetailIntent.SaveNote(noteEntity = noteEntity))
+                    if (type == ADD)
+                        detailViewModel.detailIntent.send(DetailIntent.SaveNote(noteEntity = noteEntity))
+                    else
+                        detailViewModel.detailIntent.send(DetailIntent.EditNote(noteEntity = noteEntity))
                 }
             }
 

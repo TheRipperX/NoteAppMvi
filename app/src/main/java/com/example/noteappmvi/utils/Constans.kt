@@ -15,4 +15,7 @@ const val LOW = "LOW"
 const val ALL = "ALL"
 
 const val EDIT = "edit"
+const val ADD = "add"
 const val DELETE = "delete"
+
+const val BUNDLE_ID = "bundle_id"
