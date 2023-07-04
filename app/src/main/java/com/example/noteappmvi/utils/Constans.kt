@@ -12,6 +12,7 @@ const val WORK = "WORK"
 const val NORMAL = "NORMAL"
 const val HIGH = "HIGH"
 const val LOW = "LOW"
+const val ALL = "ALL"
 
 const val EDIT = "edit"
 const val DELETE = "delete"
